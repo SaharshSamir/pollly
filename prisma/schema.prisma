@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Example {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Question {
+  id         String    @id @default(cuid())
+  ask        String
+  options    Options[]
+  totalVotes Int       @default(0)
+  createdAt  DateTime  @default(now())
+  endedAt    DateTime?
+  isEnded    Boolean   @default(false)
+  lastVoteAt DateTime?
+}
+
+model Options {
+  id         String    @id @default(cuid())
+  text       String
+  votes      Int
+  Question   Question? @relation(fields: [questionId], references: [id])
+  questionId String?
+
+  @@index([questionId], name: "Question")
+}
+
+// Username:	ziad2jql6zfgrrqha76y
+// Password:	pscale_pw_5VV8TQ2y8uguPdFosMAO6uLRnG5PzUdkTBq26LalmoM
